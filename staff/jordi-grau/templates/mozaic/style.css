@@ -1,0 +1,185 @@
+body{
+    height: 100vh;
+    width: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.container{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.square{
+    display:flex;
+    flex-wrap: wrap;
+    color: black;
+    font-size: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+.one{
+    width: 100%;
+    height: 20%;
+    background-color: cadetblue;
+}
+
+.two{
+    width: 50%;
+    height: 20%;
+    background-color:orangered;
+}
+
+.three{
+    width: 50%;
+    height: 20%;
+    background-color: goldenrod;
+}
+
+.four{
+    width: 50%;
+    height: 20%;
+    background-color: lightcoral;
+}
+
+.five{
+    width: 50%;
+    height: 20%;
+    background-color:mediumseagreen;
+}
+
+.six{
+    width: 50%;
+    height: 20%;
+    background-color: red;
+}
+
+.seven{
+    width: 50%;
+    height: 20%;
+    background-color: green;
+}
+
+.eight{
+    width: 50%;
+    height: 20%;
+    background-color: orange;
+}
+
+.nine{
+    width: 50%;
+    height: 20%;
+    background-color: olive;
+}
+
+
+    @media screen and (min-width: 768px) {
+      
+        .one{
+            width: 33.33%;  
+            height: 33.33%;      
+        }
+
+        .two{
+            width: 33.33%; 
+            height: 33.33%;       
+        }
+
+        .three{
+            width: 33.33%; 
+            height: 33.33%;       
+        }
+
+        .four{
+            width: 33.33%;
+            height: 33.33%;
+        }
+
+        .five{
+            width: 33.33%; 
+            height: 33.33%;       
+        }
+
+        .six{
+            width: 33.33%; 
+            height: 33.33%;       
+        }
+
+        .seven{
+            width: 33.33%; 
+            height: 33.33%;       
+        }
+
+        .eight{
+            width: 33.33%; 
+            height: 33.33%;       
+        }
+        .nine{
+            width: 33.33%; 
+            height: 33.33%;       
+        }
+
+        
+
+
+    }
+
+
+    @media screen and (min-width: 992px) {
+                
+        .one{
+        height: 25%;
+        width: 100%;
+        }
+        
+        
+        .two{
+            height: 25%;
+            width: 33.333%;
+        }
+        
+        
+        
+        .three{
+            height: 25%;
+            width: 33.333%;
+        }
+        
+        
+        .four{
+            height: 25%;
+            width: 33.333%;
+        }
+        
+        
+        .five{
+            height: 25%;
+            width: 25%;
+        }
+        
+        
+        .six{
+            height: 25%;
+            width: 25%;
+        }
+        
+        
+        .seven{
+            height: 25%;
+            width: 25%;
+        }
+        
+        .eight{
+            height: 25%;
+            width: 25%;
+        }
+        
+        .nine{
+            height: 25%;
+            width: 100%;  
+        }
+        
+        }
