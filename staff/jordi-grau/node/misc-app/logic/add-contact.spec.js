@@ -2,12 +2,11 @@ const addContact = require('./add-contact')
 const { random } = Math
 const fs = require('fs')
 const path = require('path')
-const uid = require('../utils/uid')
 const { expect } = require('chai')
-require('../utils/json')
-const { deleteFilesByExtensionFromDirectory } = require('../utils/files')
+require('../utils/polyfills/json')
+const { Files: { deleteFilesByExtensionFromDirectory }, uid } = require('../utils')
 
-describe.only('logic - addContact', () => {
+describe('logic - add contact', () => {
     const data = path.join(__dirname, '..', 'data')
 
     let name, surname, email, password, userId
@@ -42,12 +41,12 @@ describe.only('logic - addContact', () => {
 
             expect(id).to.be.a('string')
 
-            fs.readFile(path.join(data, 'contacts', `${id}.json`), 'utf8', (error, content) => {
+            fs.readFile(path.join(data, 'contacts', `${id}.json`), 'utf8', (error, json) => {
                 expect(error).to.be.null
 
-                expect(content).to.exist
+                expect(json).to.exist
 
-                const contact = JSON.parse(content)
+                const contact = JSON.parse(json)
 
                 expect(contact.name).to.equal(name)
                 expect(contact.surname).to.equal(surname)
@@ -56,44 +55,6 @@ describe.only('logic - addContact', () => {
                 done()
             })
         })
-    })
-
-    it('should fail on non-string field', () => {
-        expect(() => {
-            addContact(undefined, surname, email, phone, birthdate, country, function () { })
-        }).to.throw(TypeError, 'undefined is not a string')
-
-        expect(() => {
-            addContact(1, surname, email, phone, birthdate, country, function () { })
-        }).to.throw(TypeError, '1 is not a string')
-
-        expect(() => {
-            addContact(true, surname, email, phone, birthdate, country, function () { })
-        }).to.throw(TypeError, 'true is not a string')
-
-        expect(() => {
-            addContact(name, undefined, email, phone, birthdate, country, function () { })
-        }).to.throw(TypeError, 'undefined is not a string')
-
-        expect(() => {
-            addContact(name, 1, email, phone, birthdate, country, function () { })
-        }).to.throw(TypeError, '1 is not a string')
-
-        expect(() => {
-            addContact(name, true, email, phone, birthdate, country, function () { })
-        }).to.throw(TypeError, 'true is not a string')
-
-        expect(() => {
-            addContact(name, surname, email, undefined, birthdate, country, function () { })
-        }).to.throw(TypeError, 'undefined is not a string')
-
-        expect(() => {
-            addContact(name, surname, email, 1, birthdate, country, function () { })
-        }).to.throw(TypeError, '1 is not a string')
-
-        expect(() => {
-            addContact(name, surname, email, true, birthdate, country, function () { })
-        }).to.throw(TypeError, 'true is not a string')
     })
 
     afterEach(done => {

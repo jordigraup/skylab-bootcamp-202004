@@ -1,147 +1,126 @@
 const express = require('express')
-const App = require('./components/App')
-const listContacts = require('./logic/list-contacts')
-const searchContacts = require('./logic/search-contacts')
-const addContact = require('./logic/add-contact')
-const ListContacts = require('./components/ListContacts')
-const SearchContacts = require('./components/SearchContacts')
-const AddContact = require('./components/AddContact')
-const Landing = require('./components/Landing')
-const fs = require('fs')
-const path = require('path')
-const Feedback = require('./components/Feedback')
-// const objetize = require('./utils/helper/objetize')
-const Register = require('./components/Register')
-const register = require('./logic/register-user')
-const Login = require('./components/Login')
-const authenticateUser = require('./logic/authenticate-user')
-
+const { registerUser, authenticateUser, retrieveUser } = require('./logic')
 const bodyParser = require('body-parser')
+const session = require('express-session')
+const FileStore = require('session-file-store')(session)
+const path = require('path')
 
 const app = express()
-app.use(bodyParser.urlencoded({
-    extended: false
-}))
 
-app.get('/contacts', (req, res) => {
+app.set('view engine', 'pug')
+app.set('views', './components')
 
-    try {
-        listContacts((error, contacts) => {
-            if (error) throw error
-            res.send(App(ListContacts(contacts)))
-        })
-    } catch (error) {
+const parseBody = bodyParser.urlencoded({ extended: false })
 
-    }
-
-})
-
-app.get('/landing', (req, res) => {
-    res.send(App(Landing()))
-
-})
-
-app.get('/add-contact', (req, res) => {
-    res.send(App(AddContact()))
-})
-
-app.post('/add-contact', (req, res) => {
-
-    req.on('data', data => {
-
-        let obj = objetize(data)
-
-        addContact(obj, (error, id) => {
-            const {
-                name
-            } = obj
-
-            if (error) {
-                res.send(App(Feedback("Fail:(", 'error')))
-
-            } else {
-                res.send(App(Feedback(`Contact ${name} created!`)))
-            }
-        })
-
+const cookieSession = session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    // cookie: { secure: true } // WARN this does not make it work => RTFM!
+    cookie: {},
+    store: new FileStore({
+    path: path.join(__dirname, 'data', 'sessions')
     })
 })
 
-app.get('/register', (req, res) => {
-    res.send(App(Register()))
-})
+app.use(express.static('public'))
 
-app.post('/register', (req, res) => {
+app.get('/', cookieSession, (req, res) => {
     debugger
-    const { body } = req
-    console.log(body)
-    register(body, (error, userId) => {
+    const { session: { cookiesAccepted, userId } } = req
 
+    if (userId) return res.redirect('/home')
 
-        if (userId) return res.redirect('/login')
+    res.render('Landing', { cookiesAccepted })
+})
 
-        if (error) {
-            return res.send(App(Feedback(error.message, 'error')))
+app.get('/register', cookieSession, (req, res) => {
+    const { session: { cookiesAccepted, userId } } = req
 
-        }
+    if (userId) return res.redirect('/home')
+
+    res.render('Register', { cookiesAccepted })
+})
+
+app.post('/register', parseBody, (req, res) => {
+    const { body: { name, surname, email, password } } = req
+
+    registerUser(name, surname, email, password, (error, id) => {
+        if (error) throw error // TODO error handling
+
+        res.redirect('/login')
     })
 })
 
-app.get('/login', (req, res) => {
-    res.send(App(Login()))
+app.get('/login', cookieSession, (req, res) => {
+    const { session: { cookiesAccepted, userId } } = req
+
+    if (userId) return res.redirect('/home')
+
+    res.render('Login', { cookiesAccepted })
 })
 
-app.post('/login', (req, res) => {
-    const { body } = req
+app.post('/login', parseBody, cookieSession, (req, res) => {
+    const { body: { email, password } } = req
 
-    authenticateUser(body, (error, emailFound) => {
+    authenticateUser(email, password, (error, userId) => {
+        if (error) throw error // TODO error handling
+
+        const { session } = req
+
+        session.userId = userId
+
+        session.save(error => {
+            if (error) throw error
+
+            res.redirect('/home')
+        })
+    })
+})
+
+app.get('/home', cookieSession, (req, res) => {
+    const { session: { cookiesAccepted, userId } } = req
+
+    if (!userId) return res.redirect('/login')
+
+    retrieveUser(userId, (error, user) => {
+        if (error) throw error // TODO error handling
+
+        const { name } = user
+
+        res.render('Home', { cookiesAccepted, name })
+    })
+})
+
+app.post('/logout', cookieSession, (req, res) => {
+    const { session } = req
+
+    session.destroy(error => {
         if (error) throw error
 
-        !emailFound ? res.send(App(Feedback("There was an error loging in"))) : res.send(App(Feedback("CONGRATS! LOGGED IN!")))
+        res.redirect('/login')
     })
 })
 
+app.post('/accept-cookies', cookieSession, (req, res) => {
+    const { session } = req
 
+    session.cookiesAccepted = true
 
+    session.save(error => {
+        if (error) throw error // TODO error handling
 
-/*
-    } else if (url.startsWith('/search')) {
-        if (!url.includes('?')) {
-            res.end(App(SearchContacts()))
-        } else {
-            const [, queryString] = url.split('?')
-            const [, query] = queryString.split('=')
-            searchContacts(query, (error, contacts) => {
-                if (error) throw error
-                res.end(App(`${SearchContacts(query)}${ListContacts(contacts)}`))
-            })
-        }
-    } else if (url === '/add-contact') {
-        if (method === 'GET') {
-            res.end(App(AddContact()))
-        } else if (method==='POST'){
-            
-            req.on('data' , data =>{ 
-                
-                let obj = objetize(data, callback)
-                addContact(obj, (error, id)=>{
-                    const {name} = obj
-                    if (error) {
-                        res.end(App(Feedback("Fail:(",'error')))
-                    }else {
-                        res.end(App(Feedback(`Contact ${name} created!`)))
-                    }
-                })
-            })
-        }
-    } else if (url === '/style.css') {
-        fs.readFile(path.join(__dirname, url), 'utf8', (error, content) => {
-            if (error) throw error
-            res.setHeader('Content-Type', 'text/css')
-            res.end(content)
-        })
-    } else {
-    }
-})  */
+        res.redirect(req.header('referer'))
+    })
 
-app.listen(8080, () => console.log('server running at 8080')) 
+})
+
+app.get('*', cookieSession, (req, res) => {
+    const { session: { cookiesAccepted, userId } } = req
+
+    if (userId) return res.redirect('/home')
+
+    res.render('NotFound404', { cookiesAccepted })
+})
+
+app.listen(8080, () => console.log('server running'))

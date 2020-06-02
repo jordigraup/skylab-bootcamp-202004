@@ -9,5 +9,5 @@ const contact = {
     birth: '1980/10/1',
     country: 'Spain'
 }
-// 1590156394031-0.29786867989032717
-addContact("1590156394031-0.29786867989032717", contact, console.log)
+
+addContact(uid(), contact, console.log)
