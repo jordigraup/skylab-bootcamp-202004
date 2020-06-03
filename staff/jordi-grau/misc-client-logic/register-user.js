@@ -4,9 +4,6 @@ const { API_URL } = process.env
 const {Email, call} = require('misc-commons/utils')
 
 
-
-
-
 module.exports= (name, surname, email, password) =>{
     String.validate.notVoid(name)
     String.validate.notVoid(surname)
@@ -14,21 +11,19 @@ module.exports= (name, surname, email, password) =>{
     Email.validate(email)
 
     call('POST','http://192.168.0.43:8080', 
-    `{ "name": "${name}", "surname": "${surname}", "username": "${email}", "password": "${password}" }`,
+    JSON.stringify({ name, surname, email, password }),
     { 'Content-type': 'application/json' })
-        .then(response =>{
-            console.log(response)
-            response = JSON.parse(response)
-            const {status} = response
+        .then(({ status, body } ) =>{
+            
             if(status!== 201) {
-                const {error} = response
+                const {error} = JSON.parse(body)
                  throw new Error(error)
             }
 
             return 'User registered'
         })
         .catch(error=>{
-            console.error(error)
+           console.error(error)
            throw new Error(error)
         })
 
