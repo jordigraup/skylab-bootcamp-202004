@@ -1,6 +1,6 @@
 require('misc-commons/polyfills/string')
 const { Email } = require('misc-commons/utils')
-const { mongo } = require('../data')
+const { mongo } = require('misc-data')
 const { UnexistenceError, CredentialsError } = require('misc-commons/errors')
 
 module.exports = (email, password) => {

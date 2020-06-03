@@ -6,7 +6,7 @@ const retrieveUser = require('./retrieve-user')
 const { random } = Math
 const { expect } = require('chai')
 require('misc-commons/polyfills/json')
-const { mongo } = require('../data')
+
 
 describe('logic - retrieve user', () => {
     let users

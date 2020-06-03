@@ -6,7 +6,7 @@ const registerUser = require('./register-user')
 const { random } = Math
 const { expect } = require('chai')
 require('misc-commons/polyfills/json')
-const { mongo } = require('../data')
+
 
 describe('logic - register user', () => {
     let users

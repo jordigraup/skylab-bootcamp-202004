@@ -4,7 +4,7 @@ const { env: { TEST_MONGODB_URL: MONGODB_URL } } = process
 
 const addCart= require('./add-to-cart')
 const { expect } = require('chai')
-const { mongo } = require('../data')
+
 const { random } = Math
 
 describe(('add to cart'), ()=>{
@@ -29,7 +29,7 @@ describe(('add to cart'), ()=>{
     
     it('guen todo bien', ()=>{
         addCart(userId,productId)
-            .then(return carts.findOne(userId))
+            .then(()=>carts.findOne(userId))
                 .then(cart=>{
                     
                 })

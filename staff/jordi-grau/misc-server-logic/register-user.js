@@ -1,8 +1,8 @@
 require('misc-commons/polyfills/string')
 const { Email } = require('misc-commons/utils')
-require(' misc-commons/polyfills/json')
+require('misc-commons/polyfills/json')
 const { DuplicityError } = require('misc-commons/errors')
-const { mongo } = require('../data')
+const { mongo } = require('misc-data')
 
 module.exports = (name, surname, email, password) => {
     String.validate.notVoid(name)

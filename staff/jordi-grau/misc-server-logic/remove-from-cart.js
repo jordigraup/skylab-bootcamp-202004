@@ -1,5 +1,5 @@
 require('misc-commons/polyfills/string')
-const { mongo } = require('../data')
+
 
 module.exports = (userId,product) => {
     String.validate.notVoid(userId)

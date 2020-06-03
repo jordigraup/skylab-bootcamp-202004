@@ -5,8 +5,7 @@ const { PORT, SECRET } = process.env // ==== const { env : { PORT, SECRET} } = p
 //const PORT = PORT_CLI || PORT_ENV || 8080
 
 const express = require('express')
-const { registerUser, authenticateUser, retrieveUser, addContact, searchContacts } = require('./logic')
-const { users: { update } } = require("./data")
+const { registerUser, authenticateUser, retrieveUser, addContact, searchContacts } = require('misc-server-logic')
 const bodyParser = require('body-parser')
 const { name, version } = require('./package.json')
 const jwt = require('jsonwebtoken')
