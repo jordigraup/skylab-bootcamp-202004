@@ -1,5 +1,7 @@
 require('dotenv').config()
 
+
+
 const { PORT, SECRET } = process.env // ==== const { env : { PORT, SECRET} } = process
 // cosnt { argv: [,, PORT_CLI], env: {PORT: _PORT, SECRET } } = process
 //const PORT = PORT_CLI || PORT_ENV || 8080
@@ -11,6 +13,7 @@ const { name, version } = require('./package.json')
 const jwt = require('jsonwebtoken')
 const { JsonWebTokenError } = jwt
 const { handleError } = require('./helpers')
+const {mongoose} = require('misc-data')
 
 
 
@@ -18,8 +21,11 @@ const app = express()
 
 const parseBody = bodyParser.json()
 
-// users
+mongoose.connect(MONGODB_URL)
+.then(() => { 
 
+// users
+    
 app.post('/users', parseBody, (req, res) => {
     const { body: { name, surname, email, password } } = req
 
@@ -118,6 +124,28 @@ app.get('*', (req, res) => {
 })
 
 app.listen(8080, () => console.log(`${name} ${version} running`))
+
+
+
+process.on('SIGINT', () => {
+    mongoose.disconnect()
+        .then(() => console.log('\ndisconnected mongo'))
+        .catch(error => console.error('could not disconnect from mongo', error))
+        .finally(() => {
+            console.log(`${name} ${version} stopped`)
+
+            process.exit()
+        })
+})
+})
+
+.catch(error => {
+debugger // WTF! why is not reaching this point when mongodb server is off!? :face_with_symbols_over_mouth:
+
+console.error('could not connect,pedazo de mongo!!!', error)
+})
+
+
 
 
 
