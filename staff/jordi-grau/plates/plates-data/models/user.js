@@ -1,4 +1,5 @@
 const { Schema } = require('mongoose')
+const Restaurant = require('./restaurant')
 
 
 module.exports = new Schema({
@@ -19,8 +20,11 @@ module.exports = new Schema({
         validate: [Email.validate, 'invalid email']
     },
 
-    following: [platesId],
+    following: {
+        type: ObjectId, 
+        ref: 'Plate'
+    },
 
-    restaurant: restaurantId
+    restaurant: Restaurant
     
 })
