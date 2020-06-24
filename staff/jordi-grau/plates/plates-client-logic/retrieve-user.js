@@ -3,6 +3,12 @@ const { utils: { Email, call }} = require('plates-commons')
 const bcrypt = require('bcrypt')
 const context = require('./context')
 
+/**
+ * Function makes a api's call with all data needed to return user's info.
+ * @param {string} userId data needed to get user's info.
+ * 
+ * @throws {error} when api retunrs an error. 
+ */
 module.exports = function(userId) {
     String.validate.notVoid(userId)
 

@@ -3,6 +3,10 @@ require('plates-commons/polyfills/function')
 const { utils: {call}} = require('plates-commonjs')
 const context = require('./context')
 
+/**
+ * Function checks if user is authenticated.
+ * @param {string} token data required to success on checking.
+ */
 module.exports = function(token){
     String.validate.notVoid(token)
 

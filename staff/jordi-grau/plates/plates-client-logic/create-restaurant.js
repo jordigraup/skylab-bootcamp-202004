@@ -3,8 +3,14 @@ const {utils: {Email, call}} = require ('plates-commons')
 const  context  = require('./context')
 const bcrypt = require('bcrypt')
 
-
-debugger
+/**
+ * Function sends an api's request to create a restaurant on db.
+ * @param {string} name data required to create restaurant.
+ * @param {email} email data required to create restaurant.
+ * @param {string} cif data unique and required  to create restaurant.
+ * 
+ * @throws {error} when api returns an error.
+ */
 module.exports= function ( name, email, cif, address, phone) {
     String.validate.notVoid(name)
     String.validate.notVoid(email)

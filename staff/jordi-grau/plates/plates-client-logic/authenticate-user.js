@@ -4,7 +4,14 @@ const { utils: { Email,call } } = require('plates-commons')
 const brcypt = require('bcrypt')
 const context  = require('./context')
 
-
+/**
+ * Function authenticates user. 
+ * @param {email} email data required for authentication
+ * @param {string} password data required for authentication
+ * 
+ * @throws {error} when an invalid email is passed.
+ * @throws {error} when an password email is passed. 
+ */
 module.exports = function(email, password){
     String.validate.notVoid(email)
     Email.validate(email)

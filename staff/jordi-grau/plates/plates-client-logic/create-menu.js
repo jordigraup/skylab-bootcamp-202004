@@ -3,8 +3,14 @@ const {utils: {Email, call}} = require ('plates-commons')
 const  context  = require('./context')
 const bcrypt = require('bcrypt')
 
-
-debugger
+/**
+ * Function creates an array of dishes as a menu on db
+ * @param {string}  userId data required to find user's restaurant
+ * @param {string}  restaurantId data required to find correct restaurant
+ * @param {string} dishesIds data required to create menu.
+ * 
+ * @throws {error} when api sends an error.
+ */
 module.exports= function (userId, restaurantId, dishesIds) {
     String.validate.notVoid(userId)
     String.validate.notVoid(restaurantId)
