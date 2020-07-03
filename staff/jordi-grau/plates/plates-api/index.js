@@ -1,4 +1,5 @@
 require('dotenv').config()
+
 const { argv: [ , , PORT_CLI], env: {PORT: PORT_ENV, JWT_SECRET, MONGODB_URL} } = process
 const PORT = PORT_CLI || PORT_ENV || 8080
 
@@ -11,8 +12,12 @@ const { jwtVerifierExtractor, cors } = require('./middlewares')
 const { name, version } = require('./package.json')
 const { mongoose }  = require('plates-data')
 const retrieveUser = require('plates-server-logic/retrieve-user')
+<<<<<<< HEAD
 const createDish = require('plates-server-logic/create-dish')
 
+=======
+const retrieveRestaurant = require('plates-server-logic/retrieve-restaurant')
+>>>>>>> plates-develop
 
 mongoose.connect(MONGODB_URL)
     .then(()=>{
@@ -28,7 +33,7 @@ mongoose.connect(MONGODB_URL)
 
 
         app.post('/users', parseBody, (req, res) =>{
-            debugger
+             
             const { body: { name, surname, email, password }} = req
 
             try {
@@ -56,7 +61,7 @@ mongoose.connect(MONGODB_URL)
         app.post('/users/restaurant', verifyExtractJwt, parseBody, (req, res) => {
 
             const {payload: { sub: userId}, body: { name, email, cif, address, phone } } = req
-           debugger 
+             
             try {
                 createRestaurant(userId, name, email, cif, address, phone)    
                 .then(()=> res.status(201).end()) 
@@ -89,7 +94,7 @@ mongoose.connect(MONGODB_URL)
                 handleError(error, res)               
             }
         })
-
+ 
         app.get('/search/restaurant?', (req, res) => {
             const { query:{query} }   = req
             
@@ -104,7 +109,7 @@ mongoose.connect(MONGODB_URL)
 
         app.get('/users', verifyExtractJwt, (req, res) => {
             const { payload: {sub: userId} } = req
-            debugger
+             
             try {
                 retrieveUser(userId)
                     .then(user => res.status(200).json(user))
@@ -114,6 +119,7 @@ mongoose.connect(MONGODB_URL)
             }
         })
 
+<<<<<<< HEAD
         app.post('/dishes', parseBody, (req, res) =>{
             const { name, tags, price } = req
             try {
@@ -126,6 +132,23 @@ mongoose.connect(MONGODB_URL)
             
         })
 
+=======
+
+
+        app.get('/restaurant/:restaurantId',(req, res) => {
+            const { params: {restaurantId} } = req
+             
+            try {
+                retrieveRestaurant(restaurantId)
+                    .then(restaurants => res.status(200).json(restaurants))
+                    .catch(error => handleError(error,res))
+            } catch (error) {
+                handleError(error, res)
+            }
+        })
+
+
+>>>>>>> plates-develop
         app.listen(PORT, () => console.log(`${name} ${version} running on port ${PORT}`))
 
         process.on('SIGINT', () => {

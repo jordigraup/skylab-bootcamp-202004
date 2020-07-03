@@ -1,8 +1,8 @@
 require('plates-commons/polyfills/string')
-const { models: { User}} = require('plates-data')
 const { utils: { Email,call } } = require('plates-commons')
-const brcypt = require('bcrypt')
+// const brcypt = require('bcryptjs')
 const context  = require('./context')
+
 
 /**
  * Function authenticates user. 
@@ -16,7 +16,7 @@ module.exports = function(email, password){
     String.validate.notVoid(email)
     Email.validate(email)
     String.validate.notVoid(password)
-debugger
+ 
     return call(
         'POST',
         `${this.API_URL}/users/auth`,
@@ -27,7 +27,7 @@ debugger
     .then(({status, body}) => {
         if(status === 200) {
             const {token} = JSON.parse(body)
-            this.storage.token = token
+            this.storage.token = token;
 
             return 
         }

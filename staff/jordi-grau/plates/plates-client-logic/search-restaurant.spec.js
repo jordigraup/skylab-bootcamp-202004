@@ -6,14 +6,14 @@ const jwt = require('jsonwebtoken')
 require('plates-commons/polyfills/json')
 require('plates-commons/polyfills/xhr')
 const { DuplicityError, UnexistenceError, VoidError, CredentialsError } = require('plates-commons/errors')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const { random } = Math
 const { expect } = require('chai')
 const searchRestaurant = require('./search-restaurant')
 const context = require('./context')
 context.API_URL = API_URL
 context.storage = {}
-debugger
+ 
 
 describe('search ', () =>{
     let restaurantName, restaurantEmail, cif, address, phone, userEmail, password, query
@@ -89,6 +89,15 @@ describe('search ', () =>{
             expect(restaurant).to.be.null
             expect(error).to.be.instanceof(UnexistanceError)
             expect(error.message).to.equal(`no results with ${query} search`)
+        }
+    })
+
+    it('should fail when query is not a string', async() =>{
+        query = ()=>console.log("i'm not a query")
+        try {
+            searchRestaurant(query)
+        } catch (error) {
+            expect(error).to.be.instanceof(Error)
         }
     })
 

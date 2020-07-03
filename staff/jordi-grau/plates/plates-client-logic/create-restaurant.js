@@ -1,8 +1,8 @@
 require('plates-commons/polyfills/string')
 const {utils: {Email, call}} = require ('plates-commons')
 const  context  = require('./context')
-const bcrypt = require('bcrypt')
 
+<<<<<<< HEAD
 /**
  * Function sends an api's request to create a restaurant on db.
  * @param {string} name data required to create restaurant.
@@ -11,6 +11,11 @@ const bcrypt = require('bcrypt')
  * 
  * @throws {error} when api returns an error.
  */
+=======
+
+
+ 
+>>>>>>> plates-develop
 module.exports= function ( name, email, cif, address, phone) {
     String.validate.notVoid(name)
     String.validate.notVoid(email)
@@ -19,7 +24,7 @@ module.exports= function ( name, email, cif, address, phone) {
     String.validate.notVoid(address)
    const { token } = this.storage
     
-debugger
+ 
 return call(
         'POST',
         `${this.API_URL}/users/restaurant`,
@@ -28,9 +33,9 @@ return call(
     )
 
     .then(({status, body}) => {
-        debugger
+         
         if(status === 201) return
-       debugger 
+     
         const { error } = JSON.parse(body)
 
         throw new Error(error)
