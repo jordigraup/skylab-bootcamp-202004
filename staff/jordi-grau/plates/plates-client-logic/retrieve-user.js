@@ -10,6 +10,8 @@ const context = require('./context')
  * @throws {error} when api retunrs an error. 
  */
 module.exports = function(userId) {
+    const { token } = this.storage
+   
     String.validate.notVoid(userId)
 
     return call('GET',`${API_URL}/users`,undefined, {'Authorization': `Bearer ${token}`})
@@ -22,4 +24,5 @@ module.exports = function(userId) {
                 }
         })
     
-}
+}.bind(context)
+
