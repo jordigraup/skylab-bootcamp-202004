@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 require('plates-commons/polyfills/json')
 require('plates-commons/polyfills/xhr')
 const { DuplicityError, UnexistenceError, VoidError, CredentialsError } = require('plates-commons/errors')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const { random } = Math
 const { expect } = require('chai')
 const createRestaurant = require('./create-restaurant')
@@ -47,15 +47,28 @@ describe('client logic: create restaurant', () => {
     })
     
     it('should create a restaurant on correct data', async()=>{
-        debugger
+        
         await createRestaurant( restaurantName, restaurantEmail, cif, address, phone)
-debugger
+
         const restaurant = await Restaurant.findOne({name: restaurantName})
         
-        console.log(restaurant)
+       
         expect(restaurant).to.exist
         expect(restaurant.name).to.equal(restaurantName)
+       
 
+    })
+    
+    it('should fail when restaurant already exists', async() =>{
+        await Restaurant.create({name: restaurantName, email: restaurantEmail, cif, address, phone})
+        try {
+            await createRestaurant(restaurantName, restaurantEmail, cif, address, phone)
+        } catch (error) {
+            expect(error).to.be.an.instanceOf(Error)
+            expect(error.message).to.equal(`restaurant cif with ${cif} already exists`)
+                    
+        }
+        
     })
 
 

@@ -1,6 +1,6 @@
 require('dotenv').config()
 const {env: {TEST_MONGODB_URL: MONGODB_URL, API_URL}} = process
-debugger
+ 
 const { DuplicityError, UnexistenceError, VoidError } = require('plates-commons/errors')
 const {floor, random} = Math
 const { expect } = require('chai')
@@ -50,6 +50,15 @@ describe('client logic: register user', () =>{
             } catch (error) {
                 expect(error).to.exist
                 expect(error.message).to.equal(`${email} is not an e-mail`)
+            }
+        })
+
+        it('should fail on existing email', async () =>{
+           await User.create({name, surname, email, password})
+            try {
+                registerUser(name, surname, email, password)
+            } catch (error) {
+                expect(error).to.be.instanceOf(Error)
             }
         })
     })

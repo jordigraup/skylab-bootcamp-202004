@@ -1,10 +1,18 @@
 import React from 'react'
-import './Landing'
+import './Landing.sass'
+import landingImage from '../assets/dishes-landing-03.jpg'
+import Header from './Header'
 
-import { link } from 'react-router-dom' 
 
-export default function () {
-    return <section className="landing">
-        <link to="/register">Register</link> or <link to="/login">Login</link>
-    </section>
+
+export default function ({ onGoToRegister, onGoToLogin }) {
+    return <div className="landing">
+        <div className="landing__top">
+            <div className="landing__item" href="" onClick={onGoToRegister}>Register</div>
+            <div className="landing__item" href="" onClick={onGoToLogin}>Login</div>
+        </div>
+        <div>
+            <img src={landingImage} className="landing__image"/>
+        </div>
+    </div>
 }
