@@ -7,6 +7,7 @@ module.exports = {
     retrieveRestaurant: require('./retrieve-restaurant'),
     searchRestaurant: require('./search-restaurant'),
     retrieveUser: require('./retrieve-user'),
-    logoutUser: require('./logout-user')
+    logoutUser: require('./logout-user'),
+    isUserSessionVallid: require('./is-user-session-valid')
 
 }
