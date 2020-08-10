@@ -17,7 +17,7 @@ module.exports = userId => {
 
             delete user._id
            
-
+             
             return user
         })
 }

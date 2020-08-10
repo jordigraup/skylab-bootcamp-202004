@@ -4,8 +4,9 @@ const { DuplicityError, UnexistenceError, VoidError } = require('plates-commons/
 const bcrypt = require('bcryptjs');
 const { floor, random } = Math;
 const {expect} = require('chai');
-const { mongoose, models: {Menu, User, Restaurant, Plate} } = require('plates-data');
+const { mongoose, models: {User, Restaurant } } = require('plates-data');
 const registerUser = require('./register-user')
+require('plates-commons/utils/call')
 
 describe("registerUser", () => {
     let name, surname, email, password, userId;
@@ -14,9 +15,7 @@ describe("registerUser", () => {
         await mongoose.connect(MONGODB_URL);
         await Promise.all([
             User.deleteMany(),
-            Restaurant.deleteMany(),
-            Plate.deleteMany(),
-            Menu.deleteMany()
+            Restaurant.deleteMany()
         ]);
     })
 
@@ -28,7 +27,7 @@ describe("registerUser", () => {
     })
 
     it("should succeed to register a new user on correct data", async() => {
-        debugger
+       
         const result = await registerUser(name, surname, email, password);
 
         expect(result).to.be.undefined;
@@ -42,6 +41,22 @@ describe("registerUser", () => {
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         expect(isPasswordValid).to.be.true;
+    })
+
+    it("should fail to register a user if the user already exists", async() => {
+        await registerUser(name, surname, email, password)
+
+        let _error;
+
+        try {
+            await registerUser(name, surname, email, password)
+        } catch(error) {
+            _error= error;
+        }
+
+        expect(_error).to.exist;
+        expect(_error).to.be.instanceof(DuplicityError);
+        expect(_error.message).to.equal(`User with e-mail: ${email}, already exists`)
     })
 
     it('should fail to register a new user with wrong data', () => {
@@ -73,18 +88,14 @@ describe("registerUser", () => {
     afterEach(async() => {
         await Promise.all([
             User.deleteMany(),
-            Restaurant.deleteMany(),
-            Plate.deleteMany(),
-            Menu.deleteMany()
+            Restaurant.deleteMany()
         ]);
     })
 
     after(async() => {
         await Promise.all([
             User.deleteMany(),
-            Restaurant.deleteMany(),
-            Plate.deleteMany(),
-            Menu.deleteMany()
+            Restaurant.deleteMany()
         ]);
         await mongoose.disconnect();
     })
