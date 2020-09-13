@@ -35,7 +35,7 @@ module.exports = (userId, name, email,cif, address, phone)=>{
 
         if(restaurant) throw new DuplicityError(`restaurant cif with ${cif} already exists`)
 
-        const newRestaurant = await Restaurant.create({owner:user, name, address, cif, phone, email})
+        const newRestaurant = await Restaurant.create({ name, address, cif, phone, email })
 
         user.restaurant = newRestaurant
 
