@@ -12,5 +12,6 @@ module.exports = {
     logoutUser: require('./logout-user'),
     addToFollowedDishes: require('./add-to-followed-dishes'),
     createDish: require('./create-dish'),
-    createMenu: require('./create-menu')
+    createMenu: require('./create-menu'), 
+    isDishAvailable: require('is-dish-available')
 }

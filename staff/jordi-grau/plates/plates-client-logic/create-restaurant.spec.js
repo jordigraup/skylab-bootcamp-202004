@@ -13,7 +13,7 @@ const createRestaurant = require('./create-restaurant')
 const context = require('./context')
 context.API_URL = API_URL
 context.storage = {}
-debugger
+
 describe('client logic: create restaurant', () => {
     let restaurantName, restaurantEmail, cif, address, phone, userEmail, password, userId
     
@@ -21,7 +21,7 @@ describe('client logic: create restaurant', () => {
         await mongoose.connect(MONGODB_URL)
         await Promise.all([
             User.deleteMany(),
-            Restaurant.deleteMany(),            
+            Restaurant.deleteMany()            
         ])
 
     })

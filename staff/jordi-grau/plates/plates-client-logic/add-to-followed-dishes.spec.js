@@ -40,7 +40,7 @@ describe(' add to followed dishes', () =>{
         const user = await User.create({ email: userEmail, password: hash })
         userId = user.id
         users.push(user)
-        debugger
+        
         const token = jwt.sign( {sub: userId}, TEST_SECRET, { expiresIn: '1d'})
         context.storage.token = token
 
