@@ -2,7 +2,7 @@ require('dotenv').config()
 const { argv: [ , , PORT_CLI], env: {PORT: PORT_ENV, JWT_SECRET, MONGODB_URL} } = process
 const PORT = PORT_CLI || PORT_ENV || 8080
 const express = require ('express')
-const { registerUser, authenticateUser, createRestaurant, createMenu, searchPlate, searchRestaurant, retrieveUser, retrieveRestaurant, addToFollowedDishes, createDish } = require('plates-server-logic')
+const { registerUser, authenticateUser, createRestaurant, createMenu, searchPlate, searchRestaurant, retrieveUser, retrieveRestaurant, addToFollowedDishes, createDish, isDishAvailable } = require('plates-server-logic')
 const bodyParser = require('body-parser')
 const { handleError } = require('./helpers')
 const { utils: {  jwtPromised }} = require('plates-commons')
@@ -143,6 +143,17 @@ mongoose.connect(MONGODB_URL)
                 createDish(restaurantId, name, position, tags, price)
                 .then(()=> res.status(201).end())
                 .catch(error => handleError(error,res))
+            } catch (error) {
+                handleError(error, res)
+            }
+        })
+
+        app.get('/restaurant/dish/:dishId', (req, res) => {
+            const  { params: { dishId }} = req
+            try {
+                isDishAvailable(dishId)
+                .then( isAvailable => res.status(200).json(isAvailable))
+                .catch(error =>  handleError(error, res))
             } catch (error) {
                 handleError(error, res)
             }
