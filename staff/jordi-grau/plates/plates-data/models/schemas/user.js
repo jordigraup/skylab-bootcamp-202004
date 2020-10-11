@@ -26,10 +26,10 @@ module.exports = new Schema({
         required: true
     },
 
-    following: {
-        type: ObjectId, 
+    following: [{
+        type: String, 
         ref: 'Dish'
-    },
+    }],
 
     restaurant: {type: ObjectId, ref: 'Restaurant'}
     

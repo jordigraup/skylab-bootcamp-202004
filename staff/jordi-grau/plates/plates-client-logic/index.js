@@ -13,5 +13,6 @@ module.exports = {
     addToFollowedDishes: require('./add-to-followed-dishes'),
     createDish: require('./create-dish'),
     createMenu: require('./create-menu'), 
-    isDishAvailable: require('is-dish-available')
+    isDishAvailable: require('./is-dish-available'),
+    retrieveFollowedDishes: require('./retrieve-followed-dishes')
 }

@@ -32,7 +32,7 @@ module.exports = new Schema({
     },
 
      dishes: [{
-         type: ObjectId,
+         type: String,
          ref: 'Dish'
         }]
 })

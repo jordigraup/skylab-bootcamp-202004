@@ -12,18 +12,17 @@ const { expect } = require('chai')
 const context = require('./context')
 context.API_URL = API_URL
 context.storage = {}
-const isDishAvailable = require('./is-dish-available')
+const retrieveFollowedDishes = require('./retrieve-followed-dishes')
 
-
-describe('is dish available client logic', ()=> {
+describe('retrive followed dishes, client logic', () =>{
     let userEmail, password, hash, userId
     let restaurantName, restaurantEmail, cif, address, phone, restaurantId, token
     let dishName, position, price, testDish
     let tags = [ 'gluten free', 'veggie', 'fresh', 'cool']
     let dishesIds = []
     let testDishes = []
-    
-    before(async()=>{
+
+    before( async()=>{
         await mongoose.connect(MONGODB_URL)
         await Promise.all([
             User.deleteMany(),
@@ -31,8 +30,8 @@ describe('is dish available client logic', ()=> {
             Dish.deleteMany()
         ])
     })
-debugger
-    beforeEach( async() =>{
+
+    beforeEach(async() =>{
         userEmail = `user${random()}@mail.com`
         password = '12341234'
         hash = await bcrypt.hash(password, 10)
@@ -49,6 +48,7 @@ debugger
         phone = random() * 100000
         const restaurant = await Restaurant.create({ name: restaurantName, email: restaurantEmail, cif: cif, address: address, phone: phone})
         restaurantId = restaurant._id.toString()
+        debugger
 
         for (let i = 0; i < 9; i++) {
             dishName = `dishName${i}`
@@ -60,31 +60,16 @@ debugger
             dishId = testDish._id.toString()
             dishesIds.push(dishId)
             testDishes.push(testDish)
+            await Restaurant.findByIdAndUpdate(restaurantId, {$addToSet: {dishes: dishId}})
+            
+            await  User.findByIdAndUpdate(userId, {$push: {following: dishId}})
         }
-   })
-
-    it('should return true when a dish is available', async() =>{
-        dishId = dishesIds[2]
-        
-        const result = await isDishAvailable(dishId)
-        expect(result).to.be.true
     })
 
-    it('should return false when a dish is not available', async() =>{
-         
-            dishId = dishesIds[1].toString()
-            await Dish.findByIdAndUpdate( dishId, {addToSet: { available: false}})
-            result = await isDishAvailable(dishId)
-            expect(result).to.be.true
-        
-    })
-
-    after(async() =>{
-        await Promise.all([
-            User.deleteMany(),
-            Restaurant.deleteMany(),
-            Dish.deleteMany()
-        ])
-        mongoose.disconnect()
+    it('should retrieve all followed dishes by a user on correct data', async() =>{
+  
+        const result = await retrieveFollowedDishes(userId)
+       // expect(result.length).to.be.greaterThan(0)
+        expect(result.following[0]).to.equal(dishesIds[0])
     })
 })

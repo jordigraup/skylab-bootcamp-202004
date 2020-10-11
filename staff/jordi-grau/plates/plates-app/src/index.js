@@ -8,7 +8,7 @@ import { context } from 'plates-client-logic'
 
 //const { REACT_APP_API_URL: API_URL} = process.env
 
-context.API_URL =  'http://192.168.0.43:8080'
+context.API_URL =  'http://192.168.1.40:8080'
 context.storage = sessionStorage
 ReactDom.render(
     <React.StrictMode>
