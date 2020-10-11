@@ -1,6 +1,5 @@
 require('plates-commons/polyfills/string')
 const { utils: { call }} = require('plates-commons')
-const retrieveRestaurant = require('../plates-api/node_modules/plates-server-logic/retrieve-restaurant')
 const context = require('./context')
 
 module.exports = function (dishId) {
@@ -9,7 +8,7 @@ module.exports = function (dishId) {
 debugger
     return( async() =>{
         const response = await call(
-            'GET', `${this.API_URL}/resataurant/dish/${dishId}`)
+            'GET', `${this.API_URL}/restaurant/dish/${dishId}`)
 
             const { status, body } = response
 
